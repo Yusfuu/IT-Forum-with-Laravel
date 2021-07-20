@@ -22,7 +22,7 @@
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600">
           Or
-          <a href="/account/register.html" class="font-medium text-indigo-600 hover:text-indigo-500">
+          <a href="./register.html" class="font-medium text-indigo-600 hover:text-indigo-500">
             create an account
           </a>
         </p>
@@ -92,12 +92,11 @@
       const { access_token, token_type, role } = result;
       localStorage.setItem('_token', `${access_token}`);
       if (role) {
-        window.location.replace('http://localhost:5500/a/dashboard.html');
+        window.location.replace('/a/dashboard.html');
       } else {
-        window.location.replace('http://localhost:5500/u/forum.html');
+        window.location.replace('/u/forum.html');
       }
     }
-
 
   };
 </script>

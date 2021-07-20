@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,6 +22,12 @@ class UserController extends Controller
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
+
+        if ($user->banned) {
+            return response()->json([
+                'message' => 'this Account in Blacklist cicada 3301'
+            ]);
+        }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -81,5 +88,16 @@ class UserController extends Controller
             }
         }
         return response()->json(Auth::user());
+    }
+
+    public function question(Request $request)
+    {
+
+        return DB::table('questions')
+            ->join('users', 'questions.uid', '=', 'users.id')
+            ->leftJoin('responses', 'responses.qid', '=', 'questions.id')
+            ->select(['questions.id', 'questions.title', 'questions.question', 'questions.created_at', DB::raw('count(responses.qid) as count')])
+            ->where('users.id', '=', $request->user()->id)
+            ->groupBy('questions.id', 'users.id', 'responses.qid')->get();
     }
 }

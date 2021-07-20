@@ -2,31 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Question;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function index(Request $request)
     {
-        //
+        if ($request->user()->role === 0) {
+            return response()->json([
+                "message" => "unauthorized."
+            ]);
+        } else {
+            return Question::paginate(8);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function _delete(Request $request)
     {
-        //
+        if ($request->user()->role === 0) {
+            return response()->json([
+                "message" => "unauthorized."
+            ]);
+        } else {
+            return Question::destroy($request['id']);
+        }
     }
 
     /**

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reply</title>
+  <link rel="stylesheet" href="../app.css">
+</head>
+
+<body>
+
+  <div class="container mx-auto px-4 pt-4">
+    <div class="questionUser">
+
+    </div>
+
+    <div class="replys py-5">
+      <div class="rounded border-indigo-500 font-medium bg-green-500 text-white px-4 py-2 opacity-75">
+        Replys
+      </div>
+    </div>
+
+    <form id="form" class="py-5" method="POST">
+      <input type="hidden" name="qid" id="qid">
+      <div class="col-span-6 sm:col-span-4 mt-8">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+            WRITE A REPLY
+          </label>
+          <div class="mt-1">
+            <textarea name="response" rows="6"
+              class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between items-center mt-4">
+        <p class="text-sm text-gray-500 mr-8">
+          Please make sure you've read our Forum Rules before replying to this thread.
+        </p>
+
+        <button type="submit" id="reply"
+          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Reply</button>
+      </div>
+    </form>
+  </div>
+</body>
+
+<script type="module">
+  import { app } from '../app.js';
+  app.auth().then(data => {
+    console.log(data);
+  })
+  app.header();
+</script>
+<script>
+
+  function config(fd = '') {
+    const token = localStorage.getItem('_token');
+    return [
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      },
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: fd,
+      }
+    ];
+  }
+
+
+
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const { q } = Object.fromEntries(urlSearchParams.entries());
+
+  getQuestion(q);
+
+  async function getQuestion(id) {
+    const [get, post] = config();
+    const response = await fetch('http://localhost:8000/api/question/' + id, get);
+    const [result, { responses }] = await response.json();
+    qid.value = result.id
+    document.querySelector('.questionUser').innerHTML = template(result);
+
+    const replyss = responses.map(el => replys(el)).join('');
+    document.querySelector('.replys').insertAdjacentHTML('beforeend', replyss);
+  }
+
+  form.onsubmit = async (e) => {
+
+    e.preventDefault();
+    const fd = new FormData(form);
+
+    const [get, post] = config(fd);
+    const response = await fetch('http://localhost:8000/api/response/add', post);
+    const result = await response.json();
+  };
+
+
+  async function like(id) {
+    const fd = new FormData();
+    fd.append('qid', id);
+    const [get, post] = config(fd);
+
+    const response = await fetch('http://localhost:8000/api/likes', post);
+    const result = await response.json();
+  }
+
+
+  function template(_question) {
+    return `
+    <h1 class="my-5 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl"><a href="/"><span class="text-indigo-600">Forum</span></a> : ${_question.title}</h1>
+    <div class="reply bg-white border-2 rounded border-indigo-500">
+      <div class="bg-indigo-500 text-white uppercase px-4 py-2 opacity-75">Question</div>
+      <div class="flex flex-col md:flex-row md:items-center text-sm p-4 border-b">
+        <div class="flex flex-col flex-wrap flex-1 justify-between md:flex-row md:items-center mb-4 md:mb-0 md:mr-2">
+          <div class="flex">
+            <div class="thread-info-avatar">
+              <a href="#">
+                <img
+                  src="http://localhost:8000/avatars/${_question.avatar}"
+                   class="rounded-full text-gray-500 img-circle mr-3" width="25">
+              </a>
+            </div>
+
+            <div class="mr-6 mb-4 md:mb-0 text-gray-700">
+              <a href="#" class="text-lio-700 mr-2">
+                ${_question.name}
+              </a> posted ${_question.created_at}
+            </div>
+          </div>
+
+          <div class="flex flex-col items-start sm:flex-row sm:items-center">
+            <div class="mr-2">
+              ${_question.tags.split(',').map(e => `<span class="text-sm text-gray-900 bg-gray-100 border border-gray-200 rounded py-1.5 px-3 m-1 leading-none">${e}</span>`).join('')}
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4">
+        <div class="forum-content">
+          ${_question.question}
+        </div>
+      </div>
+
+      <div class="border-t">
+        <div class="thread-info-likes">
+          <button onclick="like(${_question.id})" class="text-lio-600 px-4 py-2 border-r">
+            <span class="text-2xl mr-1">👍</span>
+            ${_question.likeCount}
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+
+  function replys(r) {
+    return `
+    
+    <div class="mt-8 bg-white rounded border">
+    <div class="flex flex-col md:flex-row md:items-center text-sm p-4 border-b">
+      <div class="flex flex-wrap mb-4 md:mb-0 justify-between w-full items-center">
+        <div class="flex">
+          <div class="thread-info-avatar">
+            <a href="#">
+              <img src="http://localhost:8000/avatars/${r.ravatar}"
+                alt="Darjus Z" class="rounded-full text-gray-500 img-circle mr-3" width="25">
+            </a>
+          </div>
+
+          <div class="mr-6 mb-4 md:mb-0 text-gray-700">
+            <a href="#" class="text-lio-700">
+              ${r.rname}
+            </a> replied 1 month ago
+          </div>
+        </div>
+
+        <div class="flex reply-options">
+
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4">
+      <div class="forum-content" x-data="{}" x-init="function () { highlightCode($el); }"
+        x-html="&quot;<p>Please help have same issue<\/p>\n&quot;">
+        <p>${r.response}</p>
+      </div>
+    </div>
+
+    <div class="border-t">
+      <div class="thread-info-likes">
+        <button type="button" class="text-lio-600 px-4 py-2 border-r">
+          <span class="text-2xl mr-1">👍</span>
+          0
+        </button>
+      </div>
+    </div>
+  </div>`;
+  }
+</script>
+
+</html>

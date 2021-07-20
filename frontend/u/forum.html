@@ -8,108 +8,8 @@
   <link rel="stylesheet" href="../app.css">
   <title>Forum</title>
 </head>
-<style>
-  #observe {
-    background-color: antiquewhite;
-    width: 100%;
-    height: 50px;
-  }
-</style>
 
 <body>
-  <nav class="bg-gray-800">
-    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-      <div class="relative flex items-center justify-between h-16">
-        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <button type="button"
-            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-            aria-controls="mobile-menu" aria-expanded="false">
-            <span class="sr-only">Open main menu</span>
-            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex-shrink-0 flex items-center">
-            <img class="block lg:hidden h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-              alt="Workflow">
-            <img class="hidden lg:block h-8 w-auto"
-              src="https://tailwindui.com/img/logos/workflow-logo-indigo-500-mark-white-text.svg" alt="Workflow">
-          </div>
-          <div class="hidden sm:block sm:ml-6">
-            <div class="flex space-x-4">
-              <a href="#" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
-                aria-current="page">Dashboard</a>
-
-              <a href="#"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Team</a>
-
-              <a href="#"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Projects</a>
-
-              <a href="#"
-                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Calendar</a>
-            </div>
-          </div>
-        </div>
-        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button
-            class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-            <span class="sr-only">View notifications</span>
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-          </button>
-
-          <!-- Profile dropdown -->
-          <div class="ml-3 relative">
-            <div>
-              <button type="button"
-                class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                id="user-menu-button" aria-expanded="true" aria-haspopup="true">
-                <span class="sr-only">Open user menu</span>
-                <img id="profile" class="h-8 w-8 rounded-full" src="http://localhost:8000/avatars/default.png">
-              </button>
-            </div>
-
-            <div id="menu" style="display: none;"
-              class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-              tabindex="-1">
-              <a href="#" class="block bg-gray-100 px-4 py-2 text-sm text-gray-700" tabindex="-1"
-                id="user-menu-item-0">Your Profile</a>
-              <a href="/u/settings.html" class="block px-4 py-2 text-sm text-gray-700" tabindex="-1"
-                id="user-menu-item-1">Settings</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700" tabindex="-1" id="user-menu-item-2">Sign out</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sm:hidden" id="mobile-menu">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="#" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
-          aria-current="page">Dashboard</a>
-
-        <a href="#"
-          class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Team</a>
-
-        <a href="#"
-          class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Projects</a>
-
-        <a href="#"
-          class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Calendar</a>
-      </div>
-    </div>
-  </nav>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="flex justify-between items-center">
@@ -117,9 +17,9 @@
         Forum
       </h1>
 
-      <span style="z-index: 9;" class="inline-flex rounded-md shadow-sm">
+      <span class="inline-flex rounded-md shadow-sm">
         <a class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-          href="/u/question.html">
+          href="/u/thread.html">
           Create Thread
         </a>
       </span>
@@ -131,38 +31,16 @@
 
 </body>
 
-
-<script>
-
-  const token = localStorage.getItem('_token') || false;
-  if (document.readyState == 'loading') {
-    const config = {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-    };
-
-    fetch('http://localhost:8000/api/account/user', config)
-      .then(response => response.json())
-      .then(result => {
-        console.log(result);
-        if (result.message === 'Unauthenticated.') {
-          return window.location.replace("http://localhost:5500/account/login.html");
-        } else {
-          const { avatar } = result;
-          if (avatar.split('/').pop() !== 'default.png') {
-            (profile.src = `http://localhost:8000/avatars/${avatar}`)
-          }
-        }
-      });
-  }
+<script type="module">
+  import { app } from '../app.js';
+  app.auth().then(data => {
+    console.log(data);
+  })
+  app.header();
 
 
   const questions = document.querySelector('#questions');
   const user_menu_button = document.querySelector('#user-menu-button');
-  const dropdownStyle = [['transform', 'opacity-100', 'scale-100'], ['transform', 'opacity-0', 'scale-95']];
   const menu = document.querySelector('#menu');
   user_menu_button.onclick = () => {
     const is = 'false' === user_menu_button.getAttribute('aria-expanded');
@@ -178,16 +56,10 @@
   const forum = () => {
     let page_urls = ['http://localhost:8000/api/questions?page=1'];
 
-    const config = {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-    };
     return async () => {
-      const response = await fetch(page_urls.slice(-1), config);
+      const response = await fetch(page_urls.slice(-1), app.get());
       const { data, total, next_page_url } = await response.json();
+      console.log(data);
       for (const q of data) {
         questions.insertAdjacentHTML('beforeend', makequestion(q));
       }
@@ -196,7 +68,6 @@
     }
 
   }
-
 
 
   let observer = new IntersectionObserver(entries => {
@@ -212,22 +83,6 @@
     threshold: 1.0
   });
 
-
-
-  const logout = async () => {
-    const config = {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-    };
-    const response = await fetch('http://localhost:8000/api/account/logout', config);
-    const { data, total, next_page_url } = await response.json();
-
-  }
-
-
   observer.observe(document.querySelector('#observe'));
   const initForum = forum();
 
@@ -241,7 +96,7 @@
               <img src="http://localhost:8000/avatars/${_question.avatar}" alt="matt s"
                 class="rounded-full text-gray-500 w-6 h-6 rounded-full mr-3">
 
-              <a href="https://laravel.io/user/msporleder" class="hover:underline">
+              <a href="#" class="hover:underline">
                 <span class="text-gray-900 mr-5">${_question.name}</span>
               </a>
             </div>
@@ -259,13 +114,13 @@
       </div>
 
       <div class="mt-3 break-words">
-        <a href="https://laravel.io/forum/rename-xsrf-token-cookie" class="hover:underline">
+        <a href="./reply.html?q=${_question.id}" class="hover:underline">
           <h3 class="text-xl text-gray-900 font-semibold">
             ${_question.title}
           </h3>
         </a>
 
-        <a href="https://laravel.io/forum/rename-xsrf-token-cookie" class="hover:underline">
+        <a href="./reply.html?q=${_question.id}" class="hover:underline">
           <p class="text-gray-800 leading-7 mt-1">
             ${_question.question}
           </p>
@@ -281,7 +136,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5">
               </path>
-            </svg> <span>0</span>
+            </svg> <span>${_question.likeCount}</span>
             <span class="sr-only">Likes</span>
           </span>
 
@@ -292,7 +147,7 @@
                 d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z">
               </path>
             </svg>
-            <span>1</span>
+            <span>${_question.count}</span>
             <span class="sr-only">Replies</span>
           </span>
         </div>

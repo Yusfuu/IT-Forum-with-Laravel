@@ -39,7 +39,10 @@ class QuestionsController extends Controller
     {
         $q = DB::table('questions')
             ->join('users', 'questions.uid', '=', 'users.id')
-            ->select(['questions.id', 'questions.title', 'questions.question', 'questions.tags', 'questions.created_at', 'users.id as uid', 'users.avatar', 'users.name']);
+            ->leftJoin('likes', 'likes.qid', '=', 'questions.id')
+            ->leftJoin('responses', 'responses.qid', '=', 'questions.id')
+            ->select([DB::raw('count(likes.qid) as likeCount'), 'questions.id', 'questions.title', 'questions.question', 'questions.tags', 'questions.created_at', 'users.id as uid', 'users.avatar', 'users.name', DB::raw('count(responses.qid) as count')])
+            ->groupBy('questions.id');
 
         return $q->paginate(8);
     }
@@ -48,6 +51,26 @@ class QuestionsController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function find(Request $request, $id)
+    {
+        $q = DB::table('questions')
+            ->join('users', 'questions.uid', '=', 'users.id')
+            ->leftJoin('likes', 'likes.qid', '=', 'questions.id')
+            ->select(['questions.id', 'questions.title', 'questions.question', 'questions.tags', 'questions.created_at', 'users.id as uid', 'users.avatar', 'users.name', DB::raw('count(likes.qid) as likeCount')])->where('questions.id', '=', $id)
+            ->groupBy('questions.id', 'likes.qid')
+            ->get();
+
+        $r = DB::table('questions')
+            ->join('responses', 'responses.qid', '=', 'questions.id')
+            ->join('users', 'responses.uid', '=', 'users.id')
+            ->select(['users.avatar as ravatar', 'users.email as remail', 'users.name as rname', 'responses.response', 'users.id as ruid'])
+            ->where('questions.id', '=', $id)->get();
+
+        $q->push(['responses' => $r]);
+
+        return $q;
     }
 
 

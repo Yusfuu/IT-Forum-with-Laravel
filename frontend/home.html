@@ -126,5 +126,15 @@
   </div>
 
 </body>
+<script type="module">
+  import { app } from './app.js';
+
+  app.auth().then(data => {
+    console.log(data);
+  })
+
+
+
+</script>
 
 </html>

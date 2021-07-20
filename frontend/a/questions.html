@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../app.css">
   <title>Admin</title>
+  <link rel="stylesheet" href="../app.css">
 </head>
 
-<body style="overflow-x: hidden;">
+<body>
   <nav class="bg-gray-800">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
       <div class="relative flex items-center justify-between h-16">
@@ -76,6 +76,7 @@
       </div>
     </div>
   </nav>
+
   <div class="flex flex-col p-5">
     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -84,16 +85,13 @@
             <thead class="bg-gray-50">
               <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
+                  Title
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
+                  Question
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Role
-                </th>
-                <th scope="col" class="relative px-6 py-3">
-                  <span class="sr-only">Edit</span>
+                  tags
                 </th>
               </tr>
             </thead>
@@ -108,7 +106,6 @@
       </div>
     </div>
   </div>
-
 </body>
 <script type="module">
   import { app } from '../app.js';
@@ -119,9 +116,7 @@
   })
 </script>
 <script>
-
   const token = localStorage.getItem('_token') || false;
-
 
   const usersTable = document.querySelector('#usersTable');
   const user_menu_button = document.querySelector('#user-menu-button');
@@ -138,8 +133,8 @@
   }
 
 
-  const users = () => {
-    let page_urls = ['http://localhost:8000/api/admin/users?page=1'];
+  const questions = () => {
+    let page_urls = ['http://localhost:8000/api/admin/questions?page=1'];
 
     const config = {
       method: 'GET',
@@ -152,8 +147,9 @@
     return async () => {
       const response = await fetch(page_urls.slice(-1), config);
       const { data, total, next_page_url } = await response.json();
+      console.log(data);
       for (const q of data) {
-        usersTable.insertAdjacentHTML('beforeend', templateUsers(q));
+        usersTable.insertAdjacentHTML('beforeend', templateQuestion(q));
       }
       page_urls.push(next_page_url);
       return next_page_url;
@@ -161,11 +157,10 @@
 
   }
 
-
   let observer = new IntersectionObserver(entries => {
     entries.forEach(async entry => {
       if (entry.isIntersecting) {
-        let Take_My_Heart = await initUsers();
+        let Take_My_Heart = await initQuestions();
         !Take_My_Heart && observer.disconnect();
       }
     })
@@ -176,50 +171,34 @@
   });
 
   observer.observe(document.querySelector('#observe'));
-  const initUsers = users();
+  const initQuestions = questions();
 
-  const templateUsers = (u) => {
-    return `   <tr>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                      <img class="h-10 w-10 rounded-full"
-                        src="http://localhost:8000/avatars/${u.avatar}"
-                        alt="">
-                    </div>
-                    <div class="ml-4">
-                      <div class="text-sm font-medium text-gray-900">
-                        ${u.name}
-                      </div>
-                      <div class="text-sm text-gray-500">
-                        ${u.email} 
-                      </div>
-                    </div>
-                  </div>
+
+  const templateQuestion = (u) => {
+    return ` <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">${u.title}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">${u.question}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                      ${u.tags}
+                    </span>
+                  </td>
+                  <td onclick="_delete(${u.id})" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <p style="cursor: pointer;" class="text-red-600">Delete</p>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span
-                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.banned ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
-                    ${u.banned ? 'Inactive' : 'Active'}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  Member
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <p ${u.banned ? `onclick='activate(${u.id})'` : `onclick='banned(${u.id})'`} style="cursor: pointer;" class="text-indigo-600 hover:text-indigo-900">${u.banned ? 'Activate' : 'Deactivate'}</p>
-                </td>
-              </tr>
-    `;
+                </tr>`;
+
   }
 
-
-
-  async function banned(id) {
+  async function _delete(id) {
 
     const fd = new FormData();
     fd.append("id", id);
-
     const config = {
       method: 'POST',
       headers: {
@@ -228,31 +207,10 @@
       },
       body: fd,
     };
-
-    const response = await fetch('http://localhost:8000/api/admin/users/banned', config);
+    const response = await fetch('http://localhost:8000/api/admin/questions/delete', config);
     const result = await response.json();
     location.reload();
   }
-
-
-  async function activate(id) {
-    const fd = new FormData();
-    fd.append("id", id);
-
-    const config = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: fd,
-    };
-
-    const response = await fetch('http://localhost:8000/api/admin/users/activate', config);
-    const result = await response.json();
-    location.reload();
-  }
-
 </script>
 
 </html>
