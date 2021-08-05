@@ -211,6 +211,22 @@
     const result = await response.json();
     location.reload();
   }
+
+
+  document.querySelector('#user-menu-item-2').onclick = async () => {
+    const response = await fetch('http://localhost:8000/api/account/logout', {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${this.token}`
+      }
+    });
+    const result = await response.json();
+    window.location.replace("/account/login.html");
+    localStorage.removeItem('_token');
+
+  }
+
 </script>
 
 </html>

@@ -96,13 +96,12 @@
   }
 
   form.onsubmit = async (e) => {
-
     e.preventDefault();
     const fd = new FormData(form);
-
     const [get, post] = config(fd);
     const response = await fetch('http://localhost:8000/api/response/add', post);
     const result = await response.json();
+    location.reload();
   };
 
 
@@ -113,6 +112,8 @@
 
     const response = await fetch('http://localhost:8000/api/likes', post);
     const result = await response.json();
+    location.reload();
+
   }
 
 
@@ -183,7 +184,7 @@
           <div class="mr-6 mb-4 md:mb-0 text-gray-700">
             <a href="#" class="text-lio-700">
               ${r.rname}
-            </a> replied 1 month ago
+            </a> replied
           </div>
         </div>
 

@@ -22,7 +22,7 @@ class QuestionsController extends Controller
     {
         $field = $request->validate([
             'title' => 'required|string|max:255',
-            'question' => 'required|string',
+            'question' => 'required|string|max:1000',
             'tags' => 'required|string',
         ]);
 
@@ -44,7 +44,7 @@ class QuestionsController extends Controller
             ->select([DB::raw('count(likes.qid) as likeCount'), 'questions.id', 'questions.title', 'questions.question', 'questions.tags', 'questions.created_at', 'users.id as uid', 'users.avatar', 'users.name', DB::raw('count(responses.qid) as count')])
             ->groupBy('questions.id');
 
-        return $q->paginate(8);
+        return $q->paginate(4);
     }
 
 

@@ -122,7 +122,8 @@ export const app = {
         }
       });
       const result = await response.json();
-      console.log(result);
+      localStorage.removeItem('_token');
+      window.location.replace("/account/login.html");
     }
   },
 

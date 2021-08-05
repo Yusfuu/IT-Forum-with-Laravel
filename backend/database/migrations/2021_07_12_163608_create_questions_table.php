@@ -16,7 +16,7 @@ class CreateQuestionsTable extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('question');
+            $table->string('question', 1000);
             $table->text('tags')->nullable();
             $table->foreignId('uid')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
